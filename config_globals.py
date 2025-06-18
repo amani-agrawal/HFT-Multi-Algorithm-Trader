@@ -5,3 +5,4 @@ MAX_VOLATILITY = 20
 TICK_SIZE = 0.01            # smallest unit to trade
 COOLDOWN_PERIOD = 2         # seconds
 MIN_NOTIONAL = 10           # minimum trade amount (in $)
+PRICE_TOLERANCE = 0.05      # For real world simulation for accepted market orders
