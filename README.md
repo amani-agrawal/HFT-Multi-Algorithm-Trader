@@ -6,3 +6,4 @@ Features of this market maker:
 - Take live data from coinbase data for latest orderbooks 
 - Track all the realized and unrealized profit/loss to log and form a graph for analysis
 - Stop loss logic for terminating the program on a certain amount of loss
+- Live Evaluation Without Execution: Since the model is not deployed to a live trading environment, order fills are simulated by comparing quoted prices against the current Coinbase order book, specifically matching against the highest bid and lowest ask.
