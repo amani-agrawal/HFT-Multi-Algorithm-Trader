@@ -1,5 +1,6 @@
 import random
 from stream.coinbase_live_streamer import get_live_orderbook
+from config_globals import PRICE_TOLERANCE
 
 def simulate_limit_order(order_type, price, qty, max_slippage=1.0):
     orderbook = get_live_orderbook()
@@ -12,7 +13,7 @@ def simulate_limit_order(order_type, price, qty, max_slippage=1.0):
 
     for level_price, level_qty in book_side:
         # Check if your order is eligible to fill at this level
-        if (order_type == 'buy' and price >= level_price) or (order_type == 'sell' and price <= level_price):
+        if (order_type == 'buy' and price + PRICE_TOLERANCE >= level_price) or (order_type == 'sell' and price - PRICE_TOLERANCE <= level_price):
             # Compute fill probability
             price_distance = abs(price - level_price)
             fill_prob = max(0.1, 1.0 - price_distance / max_slippage)  # linearly decreases with distance
