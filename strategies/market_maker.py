@@ -27,8 +27,8 @@ def quote_spread(orderbook, inventory, spread, qty=0.0001, inventory_sensitivity
     mid_price = (best_bid[0] + best_ask[0]) / 2
     inv_skew = inventory_sensitivity * inventory
 
-    buy_price = mid_price - (spread / 2) + inv_skew
-    sell_price = mid_price + (spread / 2) + inv_skew
+    buy_price = mid_price - (spread / 2) - inv_skew
+    sell_price = mid_price + (spread / 2) - inv_skew
 
     buy_price = round_to_tick(buy_price)
     sell_price = round_to_tick(sell_price)
