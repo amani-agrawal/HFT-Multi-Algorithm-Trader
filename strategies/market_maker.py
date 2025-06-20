@@ -13,7 +13,8 @@ from config_globals import (
     MAX_VOLATILITY,
     TICK_SIZE,
     MIN_NOTIONAL,
-    COOLDOWN_PERIOD
+    COOLDOWN_PERIOD,
+    INVENTORY_SENSITIVITY
 )
 
 def compute_spread(best_ask, best_bid, alpha=0.9):
@@ -22,10 +23,10 @@ def compute_spread(best_ask, best_bid, alpha=0.9):
 def round_to_tick(price):
     return round(price / TICK_SIZE) * TICK_SIZE
 
-def quote_spread(orderbook, inventory, spread, qty=1, inventory_sensitivity=0.1):
+def quote_spread(orderbook, inventory, spread, qty=1):
     best_bid, best_ask = get_top_of_book(orderbook)
     mid_price = (best_bid[0] + best_ask[0]) / 2
-    inv_skew = inventory_sensitivity * inventory
+    inv_skew = INVENTORY_SENSITIVITY * inventory
 
     buy_price = mid_price - (spread / 2) - inv_skew
     sell_price = mid_price + (spread / 2) - inv_skew
@@ -38,16 +39,14 @@ def quote_spread(orderbook, inventory, spread, qty=1, inventory_sensitivity=0.1)
         "sell_order": {"price": sell_price, "qty": qty}
     }
 
-def run_market_maker(limit):
-    inventory = 0
-    cash = 0
+def run_market_maker(duration=120, inventory = 0, cash = 0):
     realized_pnl_log = []
     unrealized_pnl_log = []
     total_pnl_log = []
     mid_history = deque(maxlen=5)
     volatility = 0
 
-    for _ in range(limit):
+    for _ in range(duration):
         ob_now = get_live_orderbook()
         best_bid, best_ask = get_top_of_book(ob_now)
         mid_price_now = (best_bid[0] + best_ask[0]) / 2
@@ -98,7 +97,7 @@ def run_market_maker(limit):
             stop_trading(f"Total realized + unrealized: ${realized + unrealized}")
 
 
-    #Getting the final amount
+    #Getting the final amount -- Selling the entire inventory
     final_ob = get_live_orderbook()
     best_bid, best_ask = get_top_of_book(final_ob)
     final_mid = (best_bid[0] + best_ask[0]) / 2
