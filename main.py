@@ -20,5 +20,8 @@ if __name__ == "__main__":
         limit = 1000
     else:
         limit = int(limit)
+    #Example to run the methods
     pnl_log = run_market_maker(limit)
+    plot_pnl(pnl_log)
+    pnl_log = run_mean_reversion_strategy(limit)
     plot_pnl(pnl_log)
