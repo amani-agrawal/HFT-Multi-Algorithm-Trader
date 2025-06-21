@@ -1,0 +1,6 @@
+pandas
+requests
+matplotlib
+finnhub-python
+transformers
+torch
