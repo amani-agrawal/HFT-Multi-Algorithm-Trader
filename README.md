@@ -1,4 +1,4 @@
-**Features of this AI strategy selector:**
+**Features of this Trading Algorithm:**
 
 - Uses a machine learning classifier (e.g., Random Forest or LSTM) trained on real-time market features to choose between mean reversion, market making, and news trend strategies.
 
