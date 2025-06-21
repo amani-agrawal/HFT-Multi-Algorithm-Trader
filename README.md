@@ -1,9 +1,21 @@
-Features of this market maker:
-- Dynamic adjustment of spread to 90% of the actual spread if the spread is tight enough
-- Inventory skewing logic to not over-stock the inventory
-- Use real world market simulation with probability-based simulations, slippage effects and PRICE_TOLERANCE to assume execution of orders even if it does not match the best ask/bid in the orderbook
-- Check for volatility before quoting to avoid volatile markets and wide spreads with a cooldown period
-- Take live data from coinbase data for latest orderbooks 
-- Track all the realized and unrealized profit/loss to log and form a graph for analysis
-- Stop loss logic for terminating the program on a certain amount of loss
-- Live Evaluation Without Execution: Since the model is not deployed to a live trading environment, order fills are simulated by comparing quoted prices against the current Coinbase orderbook, specifically matching against the highest bid and lowest ask.
+**Features of this AI strategy selector:**
+
+- Uses a machine learning classifier (e.g., Random Forest or LSTM) trained on real-time market features to choose between mean reversion, market making, and news trend strategies.
+
+- xtracts features like volatility, spread, and orderbook imbalance from live Coinbase orderbook data to reflect true market microstructure.
+
+- Parses real-time news using NLP models (e.g., FinBERT and BERT-NER) to extract sentiment scores and detect company mentions for targeted news-based trading.
+
+- Switches to the news trend strategy when sentiment is strong, volatility is high, and volume spikes indicate market-moving events.
+
+- Activates the mean reversion strategy in low-volatility conditions when prices deviate significantly from their short-term moving averages with neutral sentiment.
+
+- Deploys the market making strategy in tight spread and low volatility conditions, dynamically adjusting spreads and skewing quotes based on inventory.
+
+- Incorporates inventory-aware logic to avoid overexposure by adjusting quoting direction when position size exceeds thresholds.
+
+- Avoids adverse market conditions with volatility checks and a cooldown mechanism to pause quoting during unstable periods.
+
+- Tracks realized and unrealized PnL separately across strategies and logs data for post-trade analysis and strategy evaluation.
+
+- Supports simulated execution by matching quotes against the live Coinbase top-of-book, enabling live evaluation without actual order placement.
