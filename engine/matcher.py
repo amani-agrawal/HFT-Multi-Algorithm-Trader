@@ -1,8 +1,8 @@
 import random
-from stream.coinbase_live_streamer import get_live_orderbook
+from stream.live_orderbook_streamer import get_live_orderbook
 from config_globals import PRICE_TOLERANCE, CONFIDENT_BUY
 
-def simulate_limit_order(order_type, price, qty, max_slippage=1.0):
+def simulate_limit_order(ticker, order_type, price, qty, max_slippage=1.0):
     orderbook = get_live_orderbook()
     filled = 0.0
     remaining = qty
@@ -27,7 +27,7 @@ def simulate_limit_order(order_type, price, qty, max_slippage=1.0):
                 execution_price = max(0.0, execution_price)
 
                 trades.append((execution_price, trade_qty))
-                print("Traded")
+                print(f"Traded ${ticker}")
                 filled += trade_qty
                 remaining -= trade_qty
 
@@ -38,9 +38,9 @@ def simulate_limit_order(order_type, price, qty, max_slippage=1.0):
 
     return filled, trades
 
-def simulate_order(order_type, company, qty=CONFIDENT_BUY):
+def simulate_order(ticker, order_type, qty=CONFIDENT_BUY):
     if order_type=="BUY":
-        print(f"Bought {company} for {qty} qty.")
+        print(f"Bought {ticker} for {qty} qty.")
     else:
-        print(f"Sold {company} for {qty} qty.")
+        print(f"Sold {ticker} for {qty} qty.")
     

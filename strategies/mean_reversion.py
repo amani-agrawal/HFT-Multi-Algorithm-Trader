@@ -1,4 +1,4 @@
-from stream.coinbase_live_streamer import get_live_orderbook
+from stream.live_orderbook_streamer import get_live_orderbook
 from engine.parser import get_top_of_book
 from engine.matcher import simulate_limit_order
 from risk_controls import stop_trading
@@ -6,7 +6,7 @@ from config_globals import WINDOW, THRESHOLD, MAX_INVENTORY, MIN_NOTIONAL, MAX_D
 from collections import deque
 from time import sleep
 
-def run_mean_reversion_strategy(duration=120, inventory = 0, cash = 0):
+def run_mean_reversion_strategy(ticker, duration=120, inventory = 0, cash = 0):
     """
     Executes the mean reversion strategy using a rolling SMA and fixed threshold.
     Returns PnL logs.
@@ -17,7 +17,7 @@ def run_mean_reversion_strategy(duration=120, inventory = 0, cash = 0):
     total_pnl_log = []
 
     for _ in range(duration):
-        orderbook = get_live_orderbook()
+        orderbook = get_live_orderbook(ticker)
         best_bid, best_ask = get_top_of_book(orderbook)
         mid = (best_bid[0] + best_ask[0]) / 2
         price_buffer.append(mid)
@@ -47,11 +47,11 @@ def run_mean_reversion_strategy(duration=120, inventory = 0, cash = 0):
 
         if "buy_order" in quote:
             order = quote["buy_order"]
-            filled_buy, trades_buy = simulate_limit_order("buy", order["price"], order["qty"])
+            filled_buy, trades_buy = simulate_limit_order(ticker, "buy", order["price"], order["qty"])
 
         if "sell_order" in quote:
             order = quote["sell_order"]
-            filled_sell, trades_sell = simulate_limit_order("sell", order["price"], order["qty"])
+            filled_sell, trades_sell = simulate_limit_order(ticker, "sell", order["price"], order["qty"])
 
         # Update inventory and cash
         cash -= sum(price * qty for price, qty in trades_buy)
@@ -73,7 +73,7 @@ def run_mean_reversion_strategy(duration=120, inventory = 0, cash = 0):
         sleep(1)
     
     #Getting the final amount -- Selling the entire inventory
-    final_ob = get_live_orderbook()
+    final_ob = get_live_orderbook(ticker)
     best_bid, best_ask = get_top_of_book(final_ob)
     final_mid = (best_bid[0] + best_ask[0]) / 2
 

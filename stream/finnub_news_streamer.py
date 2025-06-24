@@ -31,7 +31,7 @@ def get_general_news(category="general"):
         if not i['related']:
             companies = [e['word'] for e in ner(i['headline']) if e['entity_group'] == 'ORG']
             for j in companies:
-                if len(j)>=20:
+                if len(j)>=15:
                     continue
                 results = finnhub_client.symbol_lookup(j)['result']
                 if results and results[0]["symbol"]:

@@ -1,10 +1,19 @@
 from config_globals import NEWS_THRESHOLD
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from torch.nn.functional import softmax
+from stream.finnub_news_streamer import get_general_news, get_specific_news
+from engine.matcher import simulate_order
 
 #to extract sentiment from news
 tokenizer = AutoTokenizer.from_pretrained("yiyanghkust/finbert-tone")   
 model = AutoModelForSequenceClassification.from_pretrained("yiyanghkust/finbert-tone") 
+
+def run_news_trend():
+    news= get_general_news("general")
+    for i in news:
+        result = get_sentiment(i)
+        if result[0]!="HOLD":
+            simulate_order(result[1], result[0])
 
 def get_sentiment(news):
     if not news['related']:

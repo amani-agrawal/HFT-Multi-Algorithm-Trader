@@ -4,3 +4,5 @@ matplotlib
 finnhub-python
 transformers
 torch
+yfinance
+polygon-api-client

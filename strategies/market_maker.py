@@ -1,10 +1,11 @@
 from engine.matcher import simulate_limit_order
 from engine.parser import get_top_of_book
+from stream.live_orderbook_streamer import get_live_orderbook
 from collections import deque
 import numpy as np
 from time import sleep
 from risk_controls import stop_trading
-from stream.coinbase_live_streamer import get_live_orderbook
+
 import time
 from config_globals import (
     MAX_INVENTORY,
@@ -39,7 +40,7 @@ def quote_spread(orderbook, inventory, spread, qty=1):
         "sell_order": {"price": sell_price, "qty": qty}
     }
 
-def run_market_maker(duration=120, inventory = 0, cash = 0):
+def run_market_maker(ticker, duration=120, inventory = 0, cash = 0):
     realized_pnl_log = []
     unrealized_pnl_log = []
     total_pnl_log = []
@@ -47,7 +48,7 @@ def run_market_maker(duration=120, inventory = 0, cash = 0):
     volatility = 0
 
     for _ in range(duration):
-        ob_now = get_live_orderbook()
+        ob_now = get_live_orderbook(ticker)
         best_bid, best_ask = get_top_of_book(ob_now)
         mid_price_now = (best_bid[0] + best_ask[0]) / 2
         mid_history.append(mid_price_now)
@@ -73,10 +74,10 @@ def run_market_maker(duration=120, inventory = 0, cash = 0):
 
         #Excuting quotes
         if inventory < MAX_INVENTORY and quote["buy_order"]["price"] * quote["buy_order"]["qty"] >= MIN_NOTIONAL:
-            filled_buy, trades_buy = simulate_limit_order("buy", quote["buy_order"]["price"], quote["buy_order"]["qty"])
+            filled_buy, trades_buy = simulate_limit_order(ticker, "buy", quote["buy_order"]["price"], quote["buy_order"]["qty"])
 
         if inventory > -MAX_INVENTORY and quote["sell_order"]["price"] * quote["sell_order"]["qty"] >= MIN_NOTIONAL:
-            filled_sell, trades_sell = simulate_limit_order("sell", quote["sell_order"]["price"], quote["sell_order"]["qty"])
+            filled_sell, trades_sell = simulate_limit_order(ticker, "sell", quote["sell_order"]["price"], quote["sell_order"]["qty"])
         
         #Updating according to trades made
         cash -= sum(price * qty for price, qty in trades_buy)
@@ -98,7 +99,7 @@ def run_market_maker(duration=120, inventory = 0, cash = 0):
 
 
     #Getting the final amount -- Selling the entire inventory
-    final_ob = get_live_orderbook()
+    final_ob = get_live_orderbook(ticker)
     best_bid, best_ask = get_top_of_book(final_ob)
     final_mid = (best_bid[0] + best_ask[0]) / 2
 
