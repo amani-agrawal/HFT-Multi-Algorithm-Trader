@@ -1,10 +1,10 @@
 **Features of this Trading Algorithm:**
 
-- Uses a machine learning classifier (e.g., Random Forest or LSTM) trained on real-time market features to choose between mean reversion, market making, and news trend strategies.
+- Uses a machine learning classifier ( Random Forest ) trained on market features to choose between mean reversion and market making, while also running the news trend strategies.
 
-- xtracts features like volatility, spread, and orderbook imbalance from live Coinbase orderbook data to reflect true market microstructure.
+- Extracts features like volatility, spread, and orderbook imbalance from live Polygon orderbook data to reflect true market microstructure.
 
-- Parses real-time news using NLP models (e.g., FinBERT and BERT-NER) to extract sentiment scores and detect company mentions for targeted news-based trading.
+- Parses real-time news using NLP models ( FinBERT and BERT-NER ) to extract sentiment scores and detect company mentions for targeted news-based trading.
 
 - Switches to the news trend strategy when sentiment is strong, volatility is high, and volume spikes indicate market-moving events.
 
