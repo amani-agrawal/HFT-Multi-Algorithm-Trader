@@ -8,7 +8,7 @@ from strategies.mean_reversion import run_mean_reversion_strategy
 from strategies.news import run_news_trend
 from engine.parser import get_top_of_book
 from stream.live_orderbook_streamer import get_live_orderbook
-
+from datetime import datetime
 # Define stock tickers to monitor
 TICKERS = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA"]
 
@@ -45,8 +45,10 @@ def get_features(ticker):
 
 # Main loop
 def run_all(limit=10):
-    for _ in range(limit):
+    now = datetime.now()
+    if now.hour == 0 and now.minute == 0:
         run_news_trend()
+    for _ in range(limit):
         for ticker in TICKERS:
             print(f"\n--- Processing {ticker} ---")
             try:
