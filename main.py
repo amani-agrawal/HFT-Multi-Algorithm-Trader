@@ -45,11 +45,9 @@ def get_features(ticker):
 
 # Main loop
 def run_all(limit=10):
-    now = datetime.now()
-    if now.hour == 0 and now.minute == 0:
-        run_news_trend()
     for _ in range(limit):
         for ticker in TICKERS:
+            run_news_trend()
             print(f"\n--- Processing {ticker} ---")
             try:
                 market_data = get_features(ticker)
