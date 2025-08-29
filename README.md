@@ -18,4 +18,4 @@
 
 - Tracks realized and unrealized PnL separately across strategies and logs data for post-trade analysis and strategy evaluation.
 
-- Supports simulated execution by matching quotes against the live Coinbase top-of-book, enabling live evaluation without actual order placement.
+- Supports simulated execution by matching quotes against the live top-of-book, enabling live evaluation without actual order placement.
